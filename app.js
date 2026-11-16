@@ -44,6 +44,9 @@ const QUIZ_CONFIG = {
     { id: "fechas", number: 7, title: "Fechas y Tallas", shortTitle: "7. Fechas y Tallas" }
   ],
   questions: [
+    // ========================================================================
+    // SECCIÓN 1: GUSTOS
+    // ========================================================================
     {
       id: "nombre_apodo",
       sectionId: "gustos",
@@ -59,9 +62,6 @@ const QUIZ_CONFIG = {
         }
       ]
     },
-    // ========================================================================
-    // SECCIÓN 1: GUSTOS
-    // ========================================================================
     {
       id: "gustos_comida",
       sectionId: "gustos",
