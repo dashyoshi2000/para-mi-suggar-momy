@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#6B1D2F" />
+  <meta name="description" content="Un pequeño juego interactivo pensado especialmente para conocer tus gustos, planes ideales y detalles favoritos." />
+  <title>Para Conocerte Mejor ✨ | Quiz Especial</title>
+
+  <!-- Google Fonts: Cormorant Garamond (editorial/cálida) + Plus Jakarta Sans (limpia/moderna) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Elementos decorativos de fondo (orbes suaves) -->
+  <div class="bg-decor" aria-hidden="true">
+    <span class="orb orb-wine"></span>
+    <span class="orb orb-rose"></span>
+    <span class="orb orb-gold"></span>
+  </div>
+
+  <main class="app-shell" id="appShell">
+    <!-- Cabecera superior con progreso y estado de autoguardado -->
+    <header class="quiz-header hidden" id="quizHeader" aria-label="Progreso del cuestionario">
+      <div class="header-top">
+        <span class="section-badge" id="sectionBadge">Sección 1</span>
+        <div class="header-meta">
+          <span class="save-indicator" id="saveIndicator" aria-live="polite">
+            <span class="save-dot" aria-hidden="true"></span>
+            <span id="saveIndicatorText">Guardado</span>
+          </span>
+          <span class="step-counter" id="stepCounter">1 / 20</span>
+        </div>
+      </div>
+
+      <!-- Barra de progreso segmentada / fluida -->
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        aria-label="Avance del cuestionario"
+        id="progressBarContainer"
+      >
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <!-- Navegador rápido de secciones (píldoras) -->
+      <nav class="section-pills" id="sectionPills" aria-label="Secciones del cuestionario"></nav>
+    </header>
+
+    <!-- Tarjeta principal que aloja cada pantalla -->
+    <section class="card-stage" id="cardStage" aria-live="polite">
+      <!-- 1. PANTALLA DE BIENVENIDA -->
+      <div class="screen" id="welcomeScreen">
+        <div class="screen-icon" aria-hidden="true">💌</div>
+        <p class="eyebrow">Edición Especial</p>
+        <h1 class="display-title" id="welcomeTitle">Hola, persona especial ✨</h1>
+        <p class="lead-text" id="welcomeSubtitle">
+          Preparé este pequeño juego porque me encanta descubrir qué te hace sonreír, cuáles son tus planes favoritos y todos esos detalles que te hacen única.
+        </p>
+
+        <ul class="welcome-highlights" aria-label="Cómo funciona">
+          <li>
+            <span class="highlight-icon" aria-hidden="true">🌸</span>
+            <div>
+              <strong>Cero presiones</strong>
+              <p>Todas las preguntas son opcionales; puedes saltar cualquiera o responder solo lo que te nazca.</p>
+            </div>
+          </li>
+          <li>
+            <span class="highlight-icon" aria-hidden="true">⏳</span>
+            <div>
+              <strong>A tu propio ritmo</strong>
+              <p>Tus respuestas se guardan solitas en tu celular por si quieres pausar y seguir más tarde.</p>
+            </div>
+          </li>
+          <li>
+            <span class="highlight-icon" aria-hidden="true">🥂</span>
+            <div>
+              <strong>Sé 100% tú</strong>
+              <p>Toca las opciones rápidas o escribe tus propios detalles. ¡Todo suma para consentirte mejor!</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="welcome-actions">
+          <button type="button" id="startQuizBtn" class="btn btn-primary btn-block">
+            Empezar ✨
+          </button>
+          <button type="button" id="resumeQuizBtn" class="btn btn-secondary btn-block hidden">
+            Continuar donde me quedé
+          </button>
+          <button type="button" id="resetSavedBtn" class="btn-link hidden">
+            Borrar respuestas guardadas y empezar de cero
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. PANTALLA DINÁMICA DE PREGUNTAS -->
+      <div class="screen hidden" id="questionScreen">
+        <div class="question-Animator" id="questionAnimator">
+          <div class="question-top">
+            <span class="question-emoji" id="questionEmoji" aria-hidden="true">✨</span>
+            <p class="question-category" id="questionCategory">1. Gustos</p>
+          </div>
+
+          <h2 class="question-title" id="questionTitle">¿Cuál es tu comida favorita?</h2>
+          <p class="question-subtitle" id="questionSubtitle">
+            Selecciona una o varias ideas o escribe tus favoritas.
+          </p>
+
+          <!-- Contenedor interactivo renderizado por app.js según el tipo de pregunta -->
+          <div class="question-body" id="questionBody"></div>
+        </div>
+
+        <!-- Barra de navegación inferior del paso -->
+        <div class="question-footer">
+          <div class="nav-buttons">
+            <button type="button" id="prevBtn" class="btn btn-secondary">
+              ← Atrás
+            </button>
+            <button type="button" id="nextBtn" class="btn btn-primary">
+              Siguiente →
+            </button>
+          </div>
+
+          <div class="skip-row">
+            <button type="button" id="skipBtn" class="btn-link">
+              Saltar esta pregunta (opcional) →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. PANTALLA FINAL DE AGRADECIMIENTO Y ENVÍO -->
+      <div class="screen hidden" id="finalScreen">
+        <div class="screen-icon" aria-hidden="true">🥂</div>
+        <p class="eyebrow">¡Terminaste!</p>
+        <h1 class="display-title" id="finalTitle">¡Gracias por compartir un pedacito de tu mundo conmigo!</h1>
+        <p class="lead-text" id="finalMessage">
+          Tomo nota de cada detalle para sorprenderte, cuidarte como mereces y planear momentos increíbles juntos. 💖
+        </p>
+
+        <!-- Estado de envío al Google Sheet -->
+        <div class="submission-box" id="submissionBox" aria-live="polite">
+          <div class="submission-loading" id="submissionLoading">
+            <span class="spinner" aria-hidden="true"></span>
+            <div>
+              <strong>Guardando tus respuestas...</strong>
+              <p>Un segundito mientras enviamos todo de forma segura.</p>
+            </div>
+          </div>
+
+          <div class="submission-success hidden" id="submissionSuccess">
+            <span class="status-badge status-ok" aria-hidden="true">✓</span>
+            <div>
+              <strong>¡Tus respuestas fueron enviadas con éxito!</strong>
+              <p>Ya quedaron guardadas para futuras sorpresas. ✨</p>
+            </div>
+          </div>
+
+          <div class="submission-error hidden" id="submissionError" role="alert">
+            <span class="status-badge status-warn" aria-hidden="true">!</span>
+            <div class="submission-error-content">
+              <strong id="submissionErrorTitle">No pudimos conectar con el servidor en este momento</strong>
+              <p id="submissionErrorDesc">
+                ¡No te preocupes! Tus respuestas siguen guardadas en tu dispositivo. Puedes reintentar el envío ahora mismo o copiar tu resumen.
+              </p>
+              <div class="retry-actions">
+                <button type="button" id="retrySubmitBtn" class="btn btn-primary btn-sm">
+                  🔄 Reintentar envío
+                </button>
+                <button type="button" id="copySummaryBtn" class="btn btn-secondary btn-sm">
+                  📋 Copiar mis respuestas
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acordeón para revisar o editar respuestas antes/después -->
+        <details class="summary-details" id="summaryDetails">
+          <summary class="summary-toggle">
+            <span>📖 Ver resumen de mis respuestas (<span id="answeredCountBadge">0</span> respondidas)</span>
+          </summary>
+          <div class="summary-list" id="summaryList"></div>
+        </details>
+
+        <div class="final-actions">
+          <button type="button" id="editAnswersBtn" class="btn btn-secondary btn-block">
+            ✏️ Volver a revisar o cambiar alguna respuesta
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mensaje de privacidad permanente y visible -->
+    <footer class="privacy-footer" role="contentinfo">
+      <p class="privacy-pill">
+        <span aria-hidden="true">🔒</span>
+        <span>Tus respuestas son privadas y solo las ve quien te envió este enlace</span>
+      </p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
