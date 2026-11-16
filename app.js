@@ -44,6 +44,21 @@ const QUIZ_CONFIG = {
     { id: "fechas", number: 7, title: "Fechas y Tallas", shortTitle: "7. Fechas y Tallas" }
   ],
   questions: [
+    {
+      id: "nombre_apodo",
+      sectionId: "gustos",
+      emoji: "💬",
+      title: "¿Cómo te gusta que te digan?",
+      subtitle: "Tu nombre, tu apodo o como prefieras. Así sé que eres tú. 😊",
+      type: "multi-fields",
+      fields: [
+        {
+          key: "nombre",
+          label: "✨ Tu nombre o apodo",
+          placeholder: "Ej: Ana, Anita, Reina..."
+        }
+      ]
+    },
     // ========================================================================
     // SECCIÓN 1: GUSTOS
     // ========================================================================
